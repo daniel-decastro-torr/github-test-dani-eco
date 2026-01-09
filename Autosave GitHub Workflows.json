@@ -1,0 +1,313 @@
+{
+  "updatedAt": "2026-01-09T11:31:14.277Z",
+  "createdAt": "2026-01-05T13:40:08.361Z",
+  "id": "pYx2lAMfSvvjkeNm",
+  "name": "Autosave GitHub Workflows",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "nodes",
+        "options": {
+          "fileName": "={{ $json.fileName }}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        896,
+        16
+      ],
+      "id": "30e9c648-0a41-430e-974a-c52a06322ba1",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "7d1e0088-5354-406b-aec8-c0bdd850c177",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "59e5fa94-b3f1-42e4-9f61-c97b75b2b3ac",
+              "name": "nodes",
+              "value": "={{ JSON.stringify($json, null, 2) }}",
+              "type": "string"
+            },
+            {
+              "id": "a7e09a78-ede0-47c5-b616-1be86db278bd",
+              "name": "fileName",
+              "value": "={{ $json.name }}.json",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        16
+      ],
+      "id": "b1b5fba6-4c18-43f0-b518-79f3dc8d4d07",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "9599027e-d449-4431-971e-39a4c6399271",
+      "name": "Get many workflows",
+      "credentials": {
+        "n8nApi": {
+          "id": "AU8MppUEdxc75yWf",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "delete",
+        "owner": {
+          "__rl": true,
+          "value": "daniel-decastro-torr",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "github-test-dani-eco",
+          "mode": "list",
+          "cachedResultName": "github-test-dani-eco",
+          "cachedResultUrl": "https://github.com/daniel-decastro-torr/github-test-dani-eco"
+        },
+        "filePath": "={{ $('Edit Fields').item.json.fileName }}",
+        "commitMessage": "=Borrado automatico de {{ $('Edit Fields').item.json.fileName }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        896,
+        -144
+      ],
+      "id": "5eaeb221-b250-4170-8f92-d61d91ae72ad",
+      "name": "Delete a file",
+      "webhookId": "39397570-f972-430f-a367-103abbb0c696",
+      "credentials": {
+        "githubApi": {
+          "id": "lGkrjxj5M1KcfQg7",
+          "name": "GitHub account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "daniel-decastro-torr",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "github-test-dani-eco",
+          "mode": "list",
+          "cachedResultName": "github-test-dani-eco",
+          "cachedResultUrl": "https://github.com/daniel-decastro-torr/github-test-dani-eco"
+        },
+        "filePath": "={{ $('Edit Fields').item.json.fileName }}",
+        "binaryData": true,
+        "commitMessage": "=Update Automático Flujo {{ $('Edit Fields').item.json.fileName }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        1344,
+        112
+      ],
+      "id": "5b679e4e-6e8e-47e7-ab39-91ff395cd6ec",
+      "name": "Create a file",
+      "webhookId": "a645d2f0-0316-47b9-986b-72b21f4f490d",
+      "credentials": {
+        "githubApi": {
+          "id": "lGkrjxj5M1KcfQg7",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1136,
+        16
+      ],
+      "id": "682d617a-b0df-4c23-8ec7-b0b2d4ca9b82",
+      "name": "Wait",
+      "webhookId": "ec6c83c2-09de-4ac4-a40f-8a838c55e6fe"
+    },
+    {
+      "parameters": {
+        "events": [
+          "update"
+        ]
+      },
+      "type": "n8n-nodes-base.n8nTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "82773017-64eb-4f98-a6a6-482c70e4cb9a",
+      "name": "n8n Trigger"
+    }
+  ],
+  "connections": {
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Delete a file",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many workflows": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete a file": {
+      "main": [
+        []
+      ]
+    },
+    "Create a file": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Create a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get many workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "timeSavedPerExecution": 5
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "caa05730-04db-4792-8edd-769423a30839",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-01-05T13:40:08.361Z",
+      "createdAt": "2026-01-05T13:40:08.361Z",
+      "role": "workflow:owner",
+      "workflowId": "pYx2lAMfSvvjkeNm",
+      "projectId": "FiR0bEYqdioEW9qZ"
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2026-01-05T13:40:06.888Z",
+      "createdAt": "2026-01-05T13:40:06.888Z",
+      "id": "eU1MFc96NRIcv178",
+      "name": "internal"
+    },
+    {
+      "updatedAt": "2025-12-03T10:58:30.804Z",
+      "createdAt": "2025-12-03T10:58:30.804Z",
+      "id": "AfEjPpu06UhmQi4r",
+      "name": "Automatic-process"
+    }
+  ]
+}
